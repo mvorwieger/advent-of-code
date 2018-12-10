@@ -1,6 +1,15 @@
+/**
+ * Object Oriented Way of Solving the day one (Part 1) Problem
+ * to solve the problem:
+ * ```
+ * const arrayOfStateMutations = ["+23", "-21", "+5"]
+ * const state = new State()
+ * const state.apply(...arrayOfStateMutations) 
+ * console.log(state.value)
+ */
 class State {
     constructor() {
-        this._value = 0
+        this.value = 0
     }
 
     /**
@@ -29,11 +38,11 @@ class State {
     }
 
     _add(num) {
-        this._value += num;
+        this.value += num;
     }
 
     _sub(num) {
-        this._value -= num;
+        this.value -= num;
     }
 
     _parse(str) {
