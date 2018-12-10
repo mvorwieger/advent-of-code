@@ -1,11 +1,5 @@
 /**
- * Object Oriented Way of Solving the day one (Part 1) Problem
- * to solve the problem:
- * ```
- * const arrayOfStateMutations = ["+23", "-21", "+5"]
- * const state = new State()
- * const state.apply(...arrayOfStateMutations) 
- * console.log(state.value)
+ * Unfinished Version of Day 1, Part 2
  */
 class State {
     constructor() {
@@ -13,15 +7,6 @@ class State {
         this.pastStates = [];
     }
 
-    /**
-     * @example ```
-     *  const state = new State()
-     *  state.apply("+23")
-     *  state.apply(...["+23", "-20"])
-     *  state.apply("+23").apply("-20")
-     * ```
-     * @param  {...any} strs
-     */
     apply(...strs) {
         for (const str of strs) {
             const { operator, number } = this._parse(str);
@@ -41,6 +26,7 @@ class State {
     }
 
     findFirstDuplicateInPastStates() {
+
     }
 
     _add(num) {
@@ -59,4 +45,5 @@ class State {
             number: Number(tail.join(""))
         }
     }
+
 }
