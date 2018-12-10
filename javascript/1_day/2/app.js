@@ -10,6 +10,7 @@
 class State {
     constructor() {
         this.value = 0
+        this.pastStates = [];
     }
 
     /**
@@ -32,9 +33,14 @@ class State {
                     this._sub(number)
                     break;
             }
+
+            this.pastStates.push(this.value);
         }
 
         return this;
+    }
+
+    findFirstDuplicateInPastStates() {
     }
 
     _add(num) {
