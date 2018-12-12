@@ -13,8 +13,8 @@ exampleGrid = [
     , [Empty, Empty, Overlapping]
     ]
 
-insert :: Id -> Cord -> Size -> Grid -> Grid
-insert i c s = undefined
+-- insert :: Id -> Cord -> Size -> Grid -> Grid
+-- insert i c s = undefined
 
 -- map impl. that passes index as second arg.
 mapInd :: (a -> Int -> b) -> [a] -> [b]
@@ -24,8 +24,8 @@ mapInd f l = zipWith f l [0..]
 -- zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 -- TODO: Look for 2D Vector Addition ?
 -- calcCords :: Cord -> Size -> [Field]
-calcCords :: Field -> Cord -> Size -> Grid
-calcCords i (x, y) (h, w) = let 
+generateShape :: Field -> Cord -> Size -> Grid
+generateShape i (x, y) (h, w) = let 
         gridWidth    = x + w
         gridHeight  = y + h
         body        = replicate (gridHeight) $ replicate (gridWidth) Empty 
@@ -33,7 +33,19 @@ calcCords i (x, y) (h, w) = let
         rangeY      = [y .. gridHeight]
             in mapInd (\row y -> mapInd (\cell x -> if (x `elem` rangeX) && (y `elem` rangeY) then i else cell ) row) body 
 
+combineGrid :: Grid -> Grid -> Grid 
+combineGrid [] a = a
+combineGrid a [] = a
+combineGrid (x:xs) (y:ys) = zipWith (mergeField) x y : (combineGrid xs ys)
 
+combineGrids :: [Grid] -> Grid
+combineGrids = foldl combineGrid []
+
+mergeField :: Field -> Field -> Field
+(Cell a) `mergeField` (Cell b) = Overlapping
+_ `mergeField` Overlapping = Overlapping
+a `mergeField` Empty = a
+Empty `mergeField` a = a
 
 countOverlappingRow :: Row -> Int
 countOverlappingRow r = length $ filter (==Overlapping) r
