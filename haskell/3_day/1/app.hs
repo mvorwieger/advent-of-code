@@ -13,8 +13,12 @@ exampleGrid = [
     , [Empty, Empty, Overlapping]
     ]
 
-insert :: Id -> Cord -> Size
-insert = undefined
+insert :: Id -> Cord -> Size -> Grid -> Grid
+insert i c s = undefined
+
+-- TODO: Look for 2D Vector Addition ?
+calcCords :: -> Cord -> Size -> [Cord]
+calcCords c s = undefined
 
 countOverlappingRow :: Row -> Int
 countOverlappingRow r = length $ filter (==Overlapping) r
