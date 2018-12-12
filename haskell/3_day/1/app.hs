@@ -16,9 +16,17 @@ exampleGrid = [
 insert :: Id -> Cord -> Size -> Grid -> Grid
 insert i c s = undefined
 
+-- replicate :: Int -> a -> [a]
+-- zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 -- TODO: Look for 2D Vector Addition ?
-calcCords :: -> Cord -> Size -> [Cord]
-calcCords c s = undefined
+-- calcCords :: Cord -> Size -> [Field]
+calcCords (x, y) (h, w) = let 
+        gridWidth    = x + w
+        gridHeight  = y + h
+        body        = replicate (gridHeight) $ replicate (gridWidth) Empty 
+        rangeX      = (x, x + w)
+        rangeY      = (y, y + h)
+            in body 
 
 countOverlappingRow :: Row -> Int
 countOverlappingRow r = length $ filter (==Overlapping) r
