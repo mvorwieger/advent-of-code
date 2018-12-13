@@ -40,9 +40,9 @@ cord = do
     pure $ cordRange (x, y) (h, w)
 
 rCord :: String -> Either ParseError [Cord]
-rCord = parse field "stdin"
+rCord = parse cord "stdin"
 
 cordRange :: Cord -> Size -> [Cord] 
 cordRange (x, y) (h, w) = let rangeX = [(x + 1) .. x + w]
-                               rangeY = [(y + 1) .. y + h]
-                               in [(x, y) | x <- rangeX, y <- rangeY] 
+                              rangeY = [(y + 1) .. y + h]
+                              in [(x, y) | x <- rangeX, y <- rangeY] 
