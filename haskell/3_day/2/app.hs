@@ -10,9 +10,10 @@ type Cord = (Int, Int)
 type Size = (Int, Int)
 data TCord = TCord {uid :: Int , pos :: Cord} deriving (Show)
 
+-- We want to still compare by position by default
 instance Eq TCord where
     a == b = pos a == pos b
-
+-- We also want to ord by pos by default
 instance Ord TCord where
     a `compare` b = pos a `compare` pos b
 
@@ -24,8 +25,18 @@ main = do
     print $ show $ execute linesOfFile
 
 execute xs = case (sequenceA $ map rCord xs) of
-                Right a -> length . filter (\a -> a >= 2) . map length . (group . sort) $ concat a 
-                Left _ -> -1
+                Right a -> let listOfCords = concat a
+                               overLappingCords = filter (\(a, b) -> a >= 2) . map (\a -> (length a, a)) . (group . sort) $ listOfCords
+                               overLappingIds = removeDuplicates . concat . map (\(a, b) -> map uid b) $ overLappingCords
+                               in uid $ head $ filter (\b -> not $ uid b `elem` overLappingIds) listOfCords
+                Left _ -> -1 
+
+removeDuplicates :: Eq a => [a] -> [a]
+removeDuplicates = rdHelper []
+    where rdHelper seen [] = seen
+          rdHelper seen (x:xs)
+                  | x `elem` seen = rdHelper seen xs
+                  | otherwise = rdHelper (seen ++ [x]) xs
 
 int = read <$> many1 digit
 
