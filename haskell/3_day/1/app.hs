@@ -1,54 +1,48 @@
 import Data.List
+import Control.Arrow 
+import Data.Char
+import Text.Parsec
+import Text.Parsec.Char (spaces, digit, char)
+import Text.Parsec.String (Parser)
+import Text.Parsec (parse, many1, ParseError)
 
-data Field = Empty | Cell Int | Overlapping deriving (Show, Eq)
-type Row = [Field]
-type Grid = [Row]
 type Cord = (Int, Int)
 type Size = (Int, Int)
-type Id = Int
 
-exampleGrid = [
-      [Empty, Cell 5, Overlapping]
-    , [Cell 2, Cell 5, Overlapping]
-    , [Empty, Empty, Overlapping]
-    ]
+main :: IO()
+main = do
+    file <- readFile "./input.txt"
+    let linesOfFile = lines file
+    print "starting execution"
+    print $ show $ execute linesOfFile
 
--- insert :: Id -> Cord -> Size -> Grid -> Grid
--- insert i c s = undefined
+execute xs = case (sequenceA $ map rCord xs) of
+                Right a -> length . filter (\a -> a >= 2) . map length . (group . sort) $ concat a 
+                Left _ -> -1
 
--- map impl. that passes index as second arg.
-mapInd :: (a -> Int -> b) -> [a] -> [b]
-mapInd f l = zipWith f l [0..]
+int = read <$> many1 digit
 
--- replicate :: Int -> a -> [a]
--- zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
--- TODO: Look for 2D Vector Addition ?
--- calcCords :: Cord -> Size -> [Field]
-generateShape :: Field -> Cord -> Size -> Grid
-generateShape i (x, y) (h, w) = let 
-        gridWidth    = x + w
-        gridHeight  = y + h
-        body        = replicate (gridHeight) $ replicate (gridWidth) Empty 
-        rangeX      = [x .. gridWidth]
-        rangeY      = [y .. gridHeight]
-            in mapInd (\row y -> mapInd (\cell x -> if (x `elem` rangeX) && (y `elem` rangeY) then i else cell ) row) body 
+cord :: Parser [Cord]
+cord = do
+    char '#'
+    i <- int
+    spaces
+    char '@'
+    spaces
+    x <- int
+    char ','
+    y <- int
+    char ':'
+    spaces
+    w <- int
+    char 'x'
+    h <- int
+    pure $ cordRange (x, y) (h, w)
 
-combineGrid :: Grid -> Grid -> Grid 
-combineGrid [] a = a
-combineGrid a [] = a
-combineGrid (x:xs) (y:ys) = zipWith (mergeField) x y : (combineGrid xs ys)
+rCord :: String -> Either ParseError [Cord]
+rCord = parse field "stdin"
 
-combineGrids :: [Grid] -> Grid
-combineGrids = foldl combineGrid []
-
-mergeField :: Field -> Field -> Field
-(Cell a) `mergeField` (Cell b) = Overlapping
-_ `mergeField` Overlapping = Overlapping
-a `mergeField` Empty = a
-Empty `mergeField` a = a
-
-countOverlappingRow :: Row -> Int
-countOverlappingRow r = length $ filter (==Overlapping) r
-
-countOverlappingGrid :: Grid -> Int
-countOverlappingGrid g = foldl (\acc r -> (+) acc $ countOverlappingRow r) 0 g 
+cordRange :: Cord -> Size -> [Cord] 
+cordRange (x, y) (h, w) = let rangeX = [(x + 1) .. x + w]
+                               rangeY = [(y + 1) .. y + h]
+                               in [(x, y) | x <- rangeX, y <- rangeY] 
