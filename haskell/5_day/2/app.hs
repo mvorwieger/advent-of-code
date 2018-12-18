@@ -2,7 +2,8 @@ import Data.List
 import Data.Char
 
 -- This Solution is copied from https://www.youtube.com/watch?v=oydhA3TmB-0&t=1290s
-
+-- You will need to subtract 1 from the result of the computation. Somehow it adds 1 to the result...
+-- wasnt able to find the reason why that is
 type Input = String 
 
 main :: IO()
@@ -30,5 +31,5 @@ compareLetter a b = toUpper a `compare` toUpper b
 sameLetter :: Char -> Char -> Bool
 sameLetter a b = toUpper a == toUpper b
 
-shortestPathByRemovingOneChar i = map (\a -> (head a, (length . collapse) (filter (not . sameLetter (head a)) i))) . groupBy sameLetter . sortBy compareLetter $ i
+shortestPathByRemovingOneChar i = minimum . map (\a -> (length . collapse) (filter (not . sameLetter (head a)) i)) . groupBy sameLetter . sortBy compareLetter $ i
  
