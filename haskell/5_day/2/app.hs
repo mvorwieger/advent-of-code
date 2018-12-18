@@ -9,7 +9,6 @@ main :: IO()
 main = do x <- readFile "input.txt"
           print . show . exec $ x
 
-exec :: String -> Int
 exec = shortestPathByRemovingOneChar 
 
 doesReact :: Char -> Char -> Bool
@@ -31,5 +30,5 @@ compareLetter a b = toUpper a `compare` toUpper b
 sameLetter :: Char -> Char -> Bool
 sameLetter a b = toUpper a == toUpper b
 
-shortestPathByRemovingOneChar :: String -> Int
-shortestPathByRemovingOneChar i = minimum . map (\a -> exec (filter (not . sameLetter (head a)) i)) . groupBy sameLetter . sortBy compareLetter $ i
+shortestPathByRemovingOneChar i = minimum . map (\a -> (length . collapse) (filter (not . sameLetter (head a)) i)) . groupBy sameLetter . sortBy compareLetter $ i
+ 
