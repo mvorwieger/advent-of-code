@@ -1,24 +1,24 @@
 import Data.List
 import Data.Char
 
+type Input = String 
+
 main :: IO()
-main = do
-    str <- readFile "./input.txt"
-    print . show . length . exec $ str 
+main = do x <- readFile "input.txt"
+          print . show . exec $ x
+
+exec :: String -> Int
+exec = length . collapse 
 
 doesReact :: Char -> Char -> Bool
-doesReact a b = (toLower a == toLower b) && 
-                ((isUpper a && isLower b) || (isLower a && isUpper b))  
+doesReact a b = a /= b && (a == toUpper b || b == toUpper a)
 
-reactingPairLeft :: String -> Bool
-reactingPairLeft "" = False
-reactingPairLeft (x:"") = False
-reactingPairLeft (x:y:xs) 
-     | doesReact x y = True
-     | otherwise = reactingPairLeft (y:xs)
+next :: Input -> Input
+next (x:y:xs) | doesReact x y = next xs
+              | otherwise = x : next (y:xs)
+next x@(_) = x
 
-removePolymerRecursive :: String -> String
-removePolymerRecursive x = let newString = filter (\a -> length a < 2) . groupBy doesReact $ x
-           in if reactingPairLeft newString 
-              then removePolymerRecursive newString
-              else newString
+collapse :: Input -> Input
+collapse s | s == s' = s
+           | otherwise = collapse s'
+    where s' = next s
