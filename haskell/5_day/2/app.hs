@@ -30,5 +30,5 @@ compareLetter a b = toUpper a `compare` toUpper b
 sameLetter :: Char -> Char -> Bool
 sameLetter a b = toUpper a == toUpper b
 
-shortestPathByRemovingOneChar i = minimum . map (\a -> (length . collapse) (filter (not . sameLetter (head a)) i)) . groupBy sameLetter . sortBy compareLetter $ i
+shortestPathByRemovingOneChar i = map (\a -> (head a, (length . collapse) (filter (not . sameLetter (head a)) i))) . groupBy sameLetter . sortBy compareLetter $ i
  
