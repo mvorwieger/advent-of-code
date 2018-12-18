@@ -1,6 +1,8 @@
 import Data.List
 import Data.Char
 
+-- This Solution is copied from https://www.youtube.com/watch?v=oydhA3TmB-0&t=1290s
+
 type Input = String 
 
 main :: IO()
